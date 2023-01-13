@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html>
+    <head>
+        <title>Web Service Consume</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+        <script>
+            const url = "http://localhost:8080/exam";
+            function get() {
+                $.ajax({
+                    url: url,
+                    method: "GET",
+                    dataType: "text",
+                    success: function (result) {
+                        document.getElementById("viewer").innerHTML = result;
+                    }
+                });
+            }
+            function post() {
+                let view = document.getElementById("viewer");
+                let id = document.getElementById("id").value;
+                let nama = document.getElementById("nama").value;
+                let jumlah = document.getElementById("jumlah").value;
+                let json = {"id": id, "nama": nama, "jumlah": jumlah};
+                let obj = JSON.stringify(json);
+                //view.innerhtml = "alo";
+                $.ajax({
+                    url: 'http://localhost:8080/data',
+                    data: obj,
+                    method: 'POST',
+                    contentType: 'application/json',
+                    dataType: 'text',
+                    success: function (result) {
+                        console.log(result);
+                    }
+                });
+            }
+            function put() {
+                let view = document.getElementById("viewer");
+                let id = document.getElementById("id").value;
+                let nama = document.getElementById("nama").value;
+                let jumlah = document.getElementById("jumlah").value;
+                let json = {"id": id, "nama": nama, "jumlah": jumlah};
+                let obj = JSON.stringify(json);
+                //view.innerhtml = "alo";
+                $.ajax({
+                    url: 'http://localhost:8080/data',
+                    data: obj,
+                    method: 'PUT',
+                    contentType: 'application/json',
+                    dataType: 'text',
+                    success: function (result) {
+                        view.innerHTML = result;
+                    }
+                });
+            }
+            function del() {
+                let view = document.getElementById("viewer");
+                let id = document.getElementById("id").value;
+                let json = {id: id};
+                let obj = JSON.stringify(json);
+                //view.innerhtml = "alo";
+                $.ajax({
+                    url: 'http://localhost:8080/data',
+                    data: obj,
+                    method: 'DELETE',
+                    contentType: 'application/json',
+                    dataType: 'text',
+                    success: function (result) {
+                        view.innerHTML = result;
+                    }
+                });
+            }
+
+            function uploadImage() {
+                let formData = new FormData(document.getElementById("upload-form"));
+                $.ajax({
+                    url: '/image',
+                    data: formData,
+                    method: 'POST',
+                    processData: false,
+                    contentType: false,
+                    success: function (result) {
+                        console.log(result);
+                    }
+                });
+            }
+
+            function getImage(id) {
+                $.ajax({
+                    url: '/image/' + id,
+                    method: 'GET',
+                    contentType: 'image/jpeg',
+                    success: function (result) {
+                        let imageViewer = document.getElementById("image-viewer");
+                        imageViewer.src = "data:image/jpeg;base64," + result;
+                    }
+                });
+            }
+
+            function putImage() {
+                let id = document.getElementById("id").value;
+                let img = document.getElementById("img").files[0];
+                let formData = new FormData();
+                formData.append("img", img);
+
+                $.ajax({
+                    url: 'http://localhost:8080/image/' + id,
+                    data: formData,
+                    method: 'PUT',
+                    contentType: false,
+                    processData: false,
+                    success: function (result) {
+                        console.log(result);
+                    }
+                });
+            }
+
+
+        </script>
+    </head>
+    <body>
+        <div>RESTful Consume</div>
+        <input type="text" id="id" name="id">
+        <input type="text" id="nama" name="nama">
+        <input type="text" id="jumlah" name="jumlah"><br>
+        <br>
+        <button onclick="get()">GET</button>
+        <button onclick="post()">POST</button>
+        <button onclick="put()">PUT</button>
+        <button onclick="del()">DELETE</button>
+
+        <br><br>
+        <div id="viewer"></div>
+        <br><br>
+        <!--        <form id="upload-form" enctype="multipart/form-data">
+                    <input type="file" name="img" id="img">
+                    <button type="button" onclick="uploadImage()">Upload Image</button>
+                </form>-->
+        <br>
+
+        <!--        <form id="updateForm">
+                    <label for="id">Id:</label>
+                    <input type="text" id="imgid" name="imgid"><br>
+                    <label for="img">Select image:</label>
+                    <input type="file" id="img" name="img"><br>
+                    <button type="button" onclick="updateImage()">Update</button>
+                </form>-->
+
+        <form>
+            <!-- <input type="text" id="id" placeholder="Enter Barang ID"> -->
+            <input type="file" id="img" accept="image/*">
+            <button onclick="putImage()">Update Image</button>
+        </form>
+
+        <br>
+
+        <!--<img id="image-viewer" src="" alt="Image">-->
+        <br>
+         </body>
+</html>
